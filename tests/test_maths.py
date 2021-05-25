@@ -29,6 +29,7 @@ from d8s_math import (
     gcd,
     gray_code_to_decimal,
     hex_endiness_swap,
+    hex_get_bytes,
     hex_to_decimal,
     integer_to_decimal,
     integer_tuple_to_decimal,
@@ -74,6 +75,20 @@ y = sympy_symbol('y')
 @contextmanager
 def does_not_raise():
     yield
+
+
+@pytest.mark.parametrize(
+    "hex_input,byte_count,expected",
+    [
+        (0x12345678, 1, '0x12'),
+        (0x12345678, 2, '0x1234'),
+        (0x12345678, 3, '0x123456'),
+        (0x12345678, 4, '0x12345678'),
+        (0x12345678, 5, '0x12345678'),
+    ],
+)
+def test_hex_get_bytes__docs_1(hex_input, byte_count, expected):
+    assert hex_get_bytes(hex_input, byte_count) == expected
 
 
 @pytest.mark.parametrize(

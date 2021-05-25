@@ -1,8 +1,11 @@
 import collections
 import functools
+import itertools
 import math
 import numbers
 from typing import Any, Iterable, List, NamedTuple, Tuple, Union
+
+import sympy
 
 
 class integerTupleType(NamedTuple):
@@ -61,38 +64,18 @@ def number_furthest(a, b, target):
         return b
 
 
-# def _update_equation_with_symbol_definitions(equation: str):
-#     """Find all letters in the given equation and replace them with the appropriate call to the sympy.symbols function."""
-#     from strings import asciiLetters
-
-#     ascii_letters = [char for char in equation if char in asciiLetters()]
-
-#     for letter in set(ascii_letters):
-#         equation = equation.replace(letter, f'sympy.symbols("{letter}")')
-
-#     return equation
-
-
 def cartesian_product(a: Any, *args: Any, repeat: int = 1):
     """."""
-    import itertools
-
     return list(itertools.product(a, *args, repeat=repeat))
 
 
 def sympy_symbol(symbol_name: str):
     """."""
-    import sympy
-
     return sympy.symbols(symbol_name)
 
 
 def equation_solve(equation: str, symbols: List[str]):
     """."""
-    import sympy
-
-    # TODO: eventually, I would like to use the _update_equation_with_symbol_definitions to find symbols and replace them with the appropriate symbol definitions (so that the user doesn't have to provide symbols as an input)
-
     sympy_symbols = [sympy_symbol(symbol) for symbol in symbols]
     map(eval, sympy_symbols)
     solution = sympy.solve(equation)
@@ -101,8 +84,6 @@ def equation_solve(equation: str, symbols: List[str]):
 
 def expression_explore(expression: str, symbol: str, start: int, end: int, step: int):
     """."""
-    import sympy
-
     for i in range(start, end, step):
         equation = f'Eq({expression}, {i})'
         yield (i, equation_solve(equation, [symbol]))
@@ -133,7 +114,8 @@ def one_hot_encode(items: list, *, reverse: bool = False) -> List[list]:
 
 def is_integer_tuple(possible_integer_tuple: Any) -> bool:
     """."""
-    # I'm doing a more complex check rather than isinstance(possible_integer_tuple, IntegerTuple) because I was unable to get it consistently working when this function was used in other files... the current check works consistently
+    # I'm doing a more complex check rather than isinstance(possible_integer_tuple, IntegerTuple) because I was unable
+    # to get it consistently working when this function was used in other files... the current check works consistently
     is_integer_tuple = (
         isinstance(possible_integer_tuple, tuple)
         and hasattr(possible_integer_tuple, 'base')
@@ -180,8 +162,6 @@ def arguments_as_decimals(func):
 
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        from .maths import integer_tuple_to_decimal, is_integer_tuple
-
         new_args = []
         for arg in args:
             if isinstance(arg, str):
@@ -196,10 +176,11 @@ def arguments_as_decimals(func):
     return wrapper
 
 
-# TODO: make it more clear what values are expected as inputs to decimal_to_gray_code and gray_code_to_decimal -> decimal integers or binary?
 @arguments_as_decimals
 def decimal_to_gray_code(num: Union[str, int, float]) -> integerTupleType:
-    """Convert the given number to a gray code. This function was inspired by the code here: https://en.wikipedia.org/wiki/Gray_code#Converting_to_and_from_Gray_code."""
+    """Convert the given number to a gray code.
+
+    This function was inspired by the code here: https://en.wikipedia.org/wiki/Gray_code#Converting_to_and_from_Gray_code."""
     gray_code = num ^ (num >> 1)
     binary_gray_code = decimal_to_base(gray_code, 2)
     return binary_gray_code
@@ -208,7 +189,9 @@ def decimal_to_gray_code(num: Union[str, int, float]) -> integerTupleType:
 # TODO: should this function only take an integer tuple and not a string (e.g. '111') or int which will be intepreted as binary (e.g. 111)
 @arguments_as_decimals
 def gray_code_to_decimal(num: integerTupleType) -> int:
-    """Convert the given number to a gray code. This function was inspired by the code here: https://en.wikipedia.org/wiki/Gray_code#Converting_to_and_from_Gray_code."""
+    """Convert the given number to a gray code.
+
+    This function was inspired by the code here: https://en.wikipedia.org/wiki/Gray_code#Converting_to_and_from_Gray_code."""
     mask = num >> 1
     while mask != 0:
         num = num ^ mask
@@ -240,9 +223,6 @@ def decimal_to_roman_numeral(decimal_number) -> str:
 
     result = integer_to_roman(decimal_number)
     return result
-
-
-# TODO: need to test integer_tuple_to_decimal functions on negative numbers (use hypothesis - it would be nice to have functions to generate examples of different types of numbers)
 
 
 def integer_tuple_to_decimal(integer_tuple: integerTupleType) -> int:
@@ -383,8 +363,6 @@ def iterable_differences(iterable):
 
 def combinations(iterable, length=None):
     """Return all possible combinations of the given length which can be created from the given iterable. If no length is given, we will find all combinations of all lengths for the given iterable."""
-    import itertools
-
     if length is None:
         combos = []
         for l in range(1, len(iterable) + 1):
@@ -396,8 +374,6 @@ def combinations(iterable, length=None):
 
 def combinations_with_replacement(iterable, length=None):
     """Return all possible combinations of the given length which can be created from the given iterable. If no length is given, we will find all combinations of all lengths for the given iterable."""
-    import itertools
-
     if length is None:
         combos = []
         for l in range(1, len(iterable) + 1):
@@ -420,8 +396,6 @@ def prod(iterable):
 
 def permutations(iterable, length=None):
     """Return all possible permutations of the given iterable. If no length is given, we will find all permutations of all lengths for the given iterable"""
-    import itertools
-
     if length is None:
         perms = []
         for l in range(1, len(iterable) + 1):
@@ -535,8 +509,6 @@ def percent_change(old_value: StrOrNumberType, new_value: StrOrNumberType) -> fl
 @arguments_as_decimals
 def gcd(number1, number2):
     """Return the greatest common divisor."""
-    import math
-
     return math.gcd(number1, number2)
 
 
@@ -632,8 +604,6 @@ def number_is_odd(number: StrOrNumberType):
 
 def number_is_approx(number, approximate_value, *, relative_tolerance=1e-6):
     """."""
-    import math
-
     is_close = math.isclose(number, approximate_value, rel_tol=relative_tolerance)
     return is_close
 
@@ -691,15 +661,14 @@ def number_to_engineering_notation(number):
     decimal_form = decimal.Decimal(number)
     return decimal_form.normalize().to_eng_string()
 
+
 def hex_get_bytes(hex_number, number_of_bytes):
     length = len(hex(hex_number)) - 2
-    hex_num_bytes = length/2
-    # print(type(hex_num_bytes))
-    # print(type(number_of_bytes))
-    # print(hex_num_bytes - number_of_bytes)
-    if ((hex_num_bytes < number_of_bytes) or (hex_num_bytes == number_of_bytes)):
+    hex_num_bytes = length / 2
+
+    if (hex_num_bytes < number_of_bytes) or (hex_num_bytes == number_of_bytes):
         return hex(hex_number)
     else:
-        hex_number = hex_number >> math.floor((8*(hex_num_bytes - number_of_bytes)))
-        final_hex = hex(hex_number) 
-        return final_hex 
+        hex_number = hex_number >> math.floor((8 * (hex_num_bytes - number_of_bytes)))
+        final_hex = hex(hex_number)
+        return final_hex
