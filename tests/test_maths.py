@@ -11,7 +11,6 @@ from d8s_math import (
     combinations_with_replacement,
     decimal_to_base,
     decimal_to_gray_code,
-    decimal_to_hex,
     decimal_to_roman_numeral,
     dot_product,
     enumerate_range,
@@ -23,14 +22,11 @@ from d8s_math import (
     first_arg_as_decimal,
     floor,
     fraction_complex_to_mixed_fraction,
-    fraction_examples,
     fraction_mixed_to_complex_fraction,
     fraction_simplify,
-    gcd,
     gray_code_to_decimal,
     hex_endiness_swap,
     hex_get_bytes,
-    hex_to_decimal,
     integer_to_decimal,
     integer_tuple_to_decimal,
     is_integer_tuple,
@@ -51,25 +47,20 @@ from d8s_math import (
     number_zero_pad,
     one_cold_encode,
     one_hot_encode,
-    outer_division,
     outer_product,
-    percent,
     percent_change,
-    permutations,
     prod,
     ratio,
-    remainder,
     roman_numeral_to_decimal,
     string_to_number,
     sympy_symbol,
     transpose,
 )
-from d8s_math.maths import _base_converter_init, _hot_or_cold_encoder, _split_fraction, _split_mixed_fraction
 
 # from d8s_numbers import number_is_approx
 
-x = sympy_symbol('x')
-y = sympy_symbol('y')
+x = sympy_symbol("x")
+y = sympy_symbol("y")
 
 
 @contextmanager
@@ -80,11 +71,11 @@ def does_not_raise():
 @pytest.mark.parametrize(
     "hex_input,byte_count,expected",
     [
-        (0x12345678, 1, '0x12'),
-        (0x12345678, 2, '0x1234'),
-        (0x12345678, 3, '0x123456'),
-        (0x12345678, 4, '0x12345678'),
-        (0x12345678, 5, '0x12345678'),
+        (0x12345678, 1, "0x12"),
+        (0x12345678, 2, "0x1234"),
+        (0x12345678, 3, "0x123456"),
+        (0x12345678, 4, "0x12345678"),
+        (0x12345678, 5, "0x12345678"),
     ],
 )
 def test_hex_get_bytes__docs_1(hex_input, byte_count, expected):
@@ -106,7 +97,7 @@ def test_percent_change__docs_1(old, new, expected, possible_exception):
 
 
 def test_expression_explore_docs_1():
-    result = expression_explore('x + 1', ['x'], 0, 10, 1)
+    result = expression_explore("x + 1", ["x"], 0, 10, 1)
     assert list(result) == [
         (0, [-1]),
         (1, [0]),
@@ -148,28 +139,28 @@ def test_fibonacci_sequence_docs_1():
 
 
 def test_cartesian_product_docs_1():
-    assert cartesian_product('abc') == [('a',), ('b',), ('c',)]
-    assert cartesian_product('abc', 'abc') == [
-        ('a', 'a'),
-        ('a', 'b'),
-        ('a', 'c'),
-        ('b', 'a'),
-        ('b', 'b'),
-        ('b', 'c'),
-        ('c', 'a'),
-        ('c', 'b'),
-        ('c', 'c'),
+    assert cartesian_product("abc") == [("a",), ("b",), ("c",)]
+    assert cartesian_product("abc", "abc") == [
+        ("a", "a"),
+        ("a", "b"),
+        ("a", "c"),
+        ("b", "a"),
+        ("b", "b"),
+        ("b", "c"),
+        ("c", "a"),
+        ("c", "b"),
+        ("c", "c"),
     ]
-    assert cartesian_product('abc', repeat=2) == [
-        ('a', 'a'),
-        ('a', 'b'),
-        ('a', 'c'),
-        ('b', 'a'),
-        ('b', 'b'),
-        ('b', 'c'),
-        ('c', 'a'),
-        ('c', 'b'),
-        ('c', 'c'),
+    assert cartesian_product("abc", repeat=2) == [
+        ("a", "a"),
+        ("a", "b"),
+        ("a", "c"),
+        ("b", "a"),
+        ("b", "b"),
+        ("b", "c"),
+        ("c", "a"),
+        ("c", "b"),
+        ("c", "c"),
     ]
     assert cartesian_product([0, 1], [2, 3], [4, 5]) == [
         (0, 2, 4),
@@ -190,26 +181,26 @@ def test_ceiling_docs_1():
 
 
 def test_combinations_docs_1():
-    assert combinations('ab') == [('a',), ('b',), ('a', 'b')]
-    assert combinations('a') == [('a',)]
-    assert combinations('ab', length=1) == [('a',), ('b',)]
+    assert combinations("ab") == [("a",), ("b",), ("a", "b")]
+    assert combinations("a") == [("a",)]
+    assert combinations("ab", length=1) == [("a",), ("b",)]
 
 
 def test_combinations_with_replacement_docs_1():
-    assert combinations_with_replacement('ab') == [
-        ('a',),
-        ('b',),
-        ('a', 'a'),
-        ('a', 'b'),
-        ('b', 'b'),
+    assert combinations_with_replacement("ab") == [
+        ("a",),
+        ("b",),
+        ("a", "a"),
+        ("a", "b"),
+        ("b", "b"),
     ]
-    assert combinations_with_replacement('abc', length=2) == [
-        ('a', 'a'),
-        ('a', 'b'),
-        ('a', 'c'),
-        ('b', 'b'),
-        ('b', 'c'),
-        ('c', 'c'),
+    assert combinations_with_replacement("abc", length=2) == [
+        ("a", "a"),
+        ("a", "b"),
+        ("a", "c"),
+        ("b", "b"),
+        ("b", "c"),
+        ("c", "c"),
     ]
     assert combinations_with_replacement([1, 2, 3]) == [
         (1,),
@@ -265,8 +256,8 @@ def test_decimal_to_gray_code_docs_1():
     assert decimal_to_gray_code(13) == IntegerTuple(base=2, digits=(1, 0, 1, 1))
     assert decimal_to_gray_code(14) == IntegerTuple(base=2, digits=(1, 0, 0, 1))
     assert decimal_to_gray_code(15) == IntegerTuple(base=2, digits=(1, 0, 0, 0))
-    assert decimal_to_gray_code('0') == IntegerTuple(base=2, digits=(0,))
-    assert decimal_to_gray_code('1') == IntegerTuple(base=2, digits=(1,))
+    assert decimal_to_gray_code("0") == IntegerTuple(base=2, digits=(0,))
+    assert decimal_to_gray_code("1") == IntegerTuple(base=2, digits=(1,))
     assert decimal_to_gray_code(IntegerTuple(base=10, digits=(2,))) == IntegerTuple(base=2, digits=(1, 1))
 
 
@@ -275,8 +266,8 @@ def test_decimal_to_gray_code_docs_1():
 
 
 def test_decimal_to_roman_numeral_docs_1():
-    assert decimal_to_roman_numeral(7) == 'VII'
-    assert decimal_to_roman_numeral(9) == 'IX'
+    assert decimal_to_roman_numeral(7) == "VII"
+    assert decimal_to_roman_numeral(9) == "IX"
 
 
 def test_dot_product_docs_1():
@@ -285,9 +276,9 @@ def test_dot_product_docs_1():
 
 
 def test_equation_solve_docs_1():
-    assert equation_solve('x-2', ['x']) == [2]
-    assert equation_solve('x + y - 1', ['x', 'y']) == [{x: 1 - y}]
-    assert number_is_approx(equation_solve('Eq(tan(x), 2.348)', ['x'])[0], 1.16816837693881)
+    assert equation_solve("x-2", ["x"]) == [2]
+    assert equation_solve("x + y - 1", ["x", "y"]) == [{x: 1 - y}]
+    assert number_is_approx(equation_solve("Eq(tan(x), 2.348)", ["x"])[0], 1.16816837693881)
 
 
 def test_factorial_docs_1():
@@ -302,9 +293,9 @@ def test_floor_docs_1():
 
 
 def test_fraction_complex_to_mixed_fraction_docs_1():
-    assert fraction_complex_to_mixed_fraction('8/6') == '1 1/3'
-    assert fraction_complex_to_mixed_fraction('8/8') == '1'
-    assert fraction_complex_to_mixed_fraction('6/8') == '3/4'
+    assert fraction_complex_to_mixed_fraction("8/6") == "1 1/3"
+    assert fraction_complex_to_mixed_fraction("8/8") == "1"
+    assert fraction_complex_to_mixed_fraction("6/8") == "3/4"
 
 
 # def test_fraction_examples_docs_1():
@@ -312,21 +303,21 @@ def test_fraction_complex_to_mixed_fraction_docs_1():
 
 
 def test_fraction_mixed_to_complex_fraction_docs_1():
-    assert fraction_mixed_to_complex_fraction('1 1/3') == '4/3'
-    assert fraction_mixed_to_complex_fraction('3/4') == '3/4'
+    assert fraction_mixed_to_complex_fraction("1 1/3") == "4/3"
+    assert fraction_mixed_to_complex_fraction("3/4") == "3/4"
 
 
 def test_fraction_simplify_docs_1():
-    assert fraction_simplify('6/8') == '3/4'
-    assert fraction_simplify('8/6') == '4/3'
-    assert fraction_simplify('18/6') == '3/1'
-    assert fraction_simplify('24/528') == '1/22'
-    assert fraction_simplify('2/7') == '2/7'
-    assert fraction_simplify('7/2') == '7/2'
+    assert fraction_simplify("6/8") == "3/4"
+    assert fraction_simplify("8/6") == "4/3"
+    assert fraction_simplify("18/6") == "3/1"
+    assert fraction_simplify("24/528") == "1/22"
+    assert fraction_simplify("2/7") == "2/7"
+    assert fraction_simplify("7/2") == "7/2"
 
     # test with bad data
     with pytest.raises(ValueError):
-        assert fraction_simplify('foo') == 'fill'
+        assert fraction_simplify("foo") == "fill"
 
 
 # def test_gcd_docs_1():
@@ -344,7 +335,7 @@ def test_gray_code_to_decimal_docs_1():
 
 def test_integer_to_decimal_docs_1():
     assert integer_to_decimal(10, 2) == 2
-    assert integer_to_decimal('10', 2) == 2
+    assert integer_to_decimal("10", 2) == 2
     assert integer_to_decimal(10, 3) == 3
     assert integer_to_decimal(10, 4) == 4
 
@@ -401,20 +392,20 @@ def test_number_furthest_docs_1():
 
 
 def test_number_line_docs_1():
-    assert number_line(8.5, 0, 10, interval=0.5) == '0................|..10'
-    assert number_line(6, 5, 10, interval=1) == '5|...10'
-    assert number_line(6, 5, 10, interval=0.5) == '5.|.......10'
-    assert number_line(2, 1, 3, interval=1) == '1|3'
-    assert number_line(11, 10, 12, interval=1) == '10|12'
-    assert number_line(0, -1, 1, interval=0.5) == '-1.|.1'
-    assert number_line(0, -2, 1, interval=0.25) == '-2.......|...1'
-    assert number_line(-1, -2, 1, interval=0.25) == '-2...|.......1'
-    assert number_line(-2, -3, -1, interval=1) == '-3|-1'
-    assert number_line(-8, -10, -5, interval=0.5) == '-10...|.....-5'
-    assert number_line(1, -1, 1, interval=1) == '-1.|(1)'
-    assert number_line(1, 1, 2) == '(1)|2'
-    assert number_line(1, 1, 10) == '(1)|........10'
-    assert number_line(10, 1, 10) == '1........|(10)'
+    assert number_line(8.5, 0, 10, interval=0.5) == "0................|..10"
+    assert number_line(6, 5, 10, interval=1) == "5|...10"
+    assert number_line(6, 5, 10, interval=0.5) == "5.|.......10"
+    assert number_line(2, 1, 3, interval=1) == "1|3"
+    assert number_line(11, 10, 12, interval=1) == "10|12"
+    assert number_line(0, -1, 1, interval=0.5) == "-1.|.1"
+    assert number_line(0, -2, 1, interval=0.25) == "-2.......|...1"
+    assert number_line(-1, -2, 1, interval=0.25) == "-2...|.......1"
+    assert number_line(-2, -3, -1, interval=1) == "-3|-1"
+    assert number_line(-8, -10, -5, interval=0.5) == "-10...|.....-5"
+    assert number_line(1, -1, 1, interval=1) == "-1.|(1)"
+    assert number_line(1, 1, 2) == "(1)|2"
+    assert number_line(1, 1, 10) == "(1)|........10"
+    assert number_line(10, 1, 10) == "1........|(10)"
     with pytest.raises(RuntimeError):
         number_line(1, 10, 1, interval=1)
     with pytest.raises(RuntimeError):
@@ -469,13 +460,13 @@ def test_outer_product_docs_1():
 
 def test_prod_docs_1():
     assert prod([1, 2, 3, 4]) == 24
-    assert prod([1, '2', 3, '4']) == 24
+    assert prod([1, "2", 3, "4"]) == 24
 
 
 def test_ratio_docs_1():
-    assert ratio(5, 10) == '1:2'
-    assert ratio(2, 20) == '1:10'
-    assert ratio(12, 13) == '12:13'
+    assert ratio(5, 10) == "1:2"
+    assert ratio(2, 20) == "1:10"
+    assert ratio(12, 13) == "12:13"
 
 
 # def test_remainder_docs_1():
@@ -483,15 +474,15 @@ def test_ratio_docs_1():
 
 
 def test_roman_numeral_to_decimal_docs_1():
-    assert roman_numeral_to_decimal('vii') == 7
-    assert roman_numeral_to_decimal('ix') == 9
-    assert roman_numeral_to_decimal('iX') == 9
-    assert roman_numeral_to_decimal('Ix') == 9
-    assert roman_numeral_to_decimal('IX') == 9
+    assert roman_numeral_to_decimal("vii") == 7
+    assert roman_numeral_to_decimal("ix") == 9
+    assert roman_numeral_to_decimal("iX") == 9
+    assert roman_numeral_to_decimal("Ix") == 9
+    assert roman_numeral_to_decimal("IX") == 9
 
 
 def test_sympy_symbol_docs_1():
-    assert sympy_symbol('x') == x
+    assert sympy_symbol("x") == x
 
 
 def test_transpose_docs_1():
@@ -518,14 +509,14 @@ def test_number_is_approx_1():
 
 def test_is_number_1():
     assert is_number(1)
-    assert is_number('1')
+    assert is_number("1")
     assert is_number(1.0)
-    assert is_number('1.02343024923')
-    assert is_number('-1.02343024923')
+    assert is_number("1.02343024923")
+    assert is_number("-1.02343024923")
 
     # TODO: is the test below expected? should I remove spaces on inputs?
-    assert not is_number('- 1.02343024923')
-    assert not is_number('foo')
+    assert not is_number("- 1.02343024923")
+    assert not is_number("foo")
 
 
 def test_number_zero_pad_1():
@@ -533,13 +524,13 @@ def test_number_zero_pad_1():
         number_zero_pad(1, 0)
 
     results = number_zero_pad(1, 1)
-    assert results == '1'
+    assert results == "1"
 
-    assert number_zero_pad(1, 2) == '01'
-    assert number_zero_pad(1.0, 2) == '01'
-    assert number_zero_pad('1', 2) == '01'
+    assert number_zero_pad(1, 2) == "01"
+    assert number_zero_pad(1.0, 2) == "01"
+    assert number_zero_pad("1", 2) == "01"
 
-    assert number_zero_pad('1', 5) == '00001'
+    assert number_zero_pad("1", 5) == "00001"
 
 
 def test_number_is_even_1():
@@ -559,36 +550,36 @@ def test_number_is_odd_1():
 
 
 def test_hex_endiness_swap_1():
-    assert hex_endiness_swap(0x12345678) == '78563412'
+    assert hex_endiness_swap(0x12345678) == "78563412"
 
 
 def test_number_to_words():
-    assert number_to_words(100) == 'one hundred'
-    assert number_to_words(1.1) == 'one point one'
-    assert number_to_words(1234) == 'one thousand, two hundred and thirty-four'
+    assert number_to_words(100) == "one hundred"
+    assert number_to_words(1.1) == "one point one"
+    assert number_to_words(1234) == "one thousand, two hundred and thirty-four"
 
 
 def test_enumerate_range_1():
-    assert enumerate_range('0-2') == [0, 1, 2]
-    assert enumerate_range('0 - 2') == [0, 1, 2]
-    assert enumerate_range('27 - 35') == [27, 28, 29, 30, 31, 32, 33, 34, 35]
+    assert enumerate_range("0-2") == [0, 1, 2]
+    assert enumerate_range("0 - 2") == [0, 1, 2]
+    assert enumerate_range("27 - 35") == [27, 28, 29, 30, 31, 32, 33, 34, 35]
 
     with pytest.raises(ValueError):
-        enumerate_range('foo')
+        enumerate_range("foo")
 
     with pytest.raises(ValueError):
-        enumerate_range('1-foo')
+        enumerate_range("1-foo")
 
 
 def test_number_to_scientific_notation():
-    assert number_to_scientific_notation(79517805896) == '7.9517805896E+10'
-    assert number_to_scientific_notation('79517805896') == '7.9517805896E+10'
-    assert number_to_scientific_notation(795178.05896) == '7.9517805896E+05'
+    assert number_to_scientific_notation(79517805896) == "7.9517805896E+10"
+    assert number_to_scientific_notation("79517805896") == "7.9517805896E+10"
+    assert number_to_scientific_notation(795178.05896) == "7.9517805896E+05"
 
 
 def test_number_to_engineering_notation():
-    assert number_to_engineering_notation(10000000) == '10E+6'
-    assert number_to_engineering_notation('10000000') == '10E+6'
+    assert number_to_engineering_notation(10000000) == "10E+6"
+    assert number_to_engineering_notation("10000000") == "10E+6"
 
 
 @arguments_as_decimals
@@ -597,7 +588,7 @@ def arguments_as_decimals_test_func(a):
 
 
 def test_arguments_as_decimals_1():
-    result = arguments_as_decimals_test_func('1')
+    result = arguments_as_decimals_test_func("1")
     assert result == 1
     assert isinstance(result, int)
 
@@ -605,7 +596,7 @@ def test_arguments_as_decimals_1():
     assert result == 1
     assert isinstance(result, int)
 
-    result = arguments_as_decimals_test_func('1.123112')
+    result = arguments_as_decimals_test_func("1.123112")
     assert result == 1.123112
     assert isinstance(result, float)
 
@@ -627,18 +618,18 @@ def test_arguments_as_decimals_1():
 
 
 def test_string_to_number_docs_1():
-    assert string_to_number('1') == 1
+    assert string_to_number("1") == 1
     assert string_to_number(1) == 1
-    assert string_to_number('2.0') == 2.0
+    assert string_to_number("2.0") == 2.0
     assert string_to_number(2.0) == 2.0
 
     with pytest.raises(RuntimeError):
-        assert string_to_number('foo')
+        assert string_to_number("foo")
 
 
 def test_string_to_number_docs_invalid_values():
     with pytest.raises(RuntimeError):
-        string_to_number('foo')
+        string_to_number("foo")
 
 
 @first_arg_as_decimal
@@ -648,12 +639,12 @@ def first_arg_as_decimal_test_func_a(a):
 
 
 def test_first_arg_as_decimal_1():
-    assert first_arg_as_decimal_test_func_a('1') == 1
-    assert first_arg_as_decimal_test_func_a('1.123') == 1.123
+    assert first_arg_as_decimal_test_func_a("1") == 1
+    assert first_arg_as_decimal_test_func_a("1.123") == 1.123
     assert first_arg_as_decimal_test_func_a(1) == 1
     assert first_arg_as_decimal_test_func_a(1.123) == 1.123
 
     with pytest.raises(RuntimeError):
-        first_arg_as_decimal_test_func_a('foo')
+        first_arg_as_decimal_test_func_a("foo")
 
-    first_arg_as_decimal_test_func_a([1, '2', '3.14']) == [1, 2, 3.14]
+    first_arg_as_decimal_test_func_a([1, "2", "3.14"]) == [1, 2, 3.14]
