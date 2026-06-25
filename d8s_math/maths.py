@@ -3,7 +3,7 @@ import functools
 import itertools
 import math
 import numbers
-from typing import Any, Iterable, List, NamedTuple, Tuple, Union
+from typing import Any, List, NamedTuple, Tuple, Union
 
 import sympy
 
@@ -31,7 +31,7 @@ StrOrNumberType = Union[str, int, float, integerTupleType]
 #     # TODO: may want to write a function to standardize percentages (e.g. 0.1 and 10 and '10' and '10%')
 
 
-IntegerTuple = collections.namedtuple('IntegerTuple', ['base', 'digits'])
+IntegerTuple = collections.namedtuple("IntegerTuple", ["base", "digits"])
 
 
 def fibonacci_sequence(n: int) -> List[int]:
@@ -85,7 +85,7 @@ def equation_solve(equation: str, symbols: List[str]):
 def expression_explore(expression: str, symbol: str, start: int, end: int, step: int):
     """."""
     for i in range(start, end, step):
-        equation = f'Eq({expression}, {i})'
+        equation = f"Eq({expression}, {i})"
         yield (i, equation_solve(equation, [symbol]))
 
 
@@ -118,8 +118,8 @@ def is_integer_tuple(possible_integer_tuple: Any) -> bool:
     # to get it consistently working when this function was used in other files... the current check works consistently
     is_integer_tuple = (
         isinstance(possible_integer_tuple, tuple)
-        and hasattr(possible_integer_tuple, 'base')
-        and hasattr(possible_integer_tuple, 'digits')
+        and hasattr(possible_integer_tuple, "base")
+        and hasattr(possible_integer_tuple, "digits")
     )
     return is_integer_tuple
 
@@ -135,7 +135,7 @@ def string_to_number(string: str) -> Union[int, float]:
         try:
             return float(string)
         except ValueError:
-            message = f'Unable to convert {string} to a number.'
+            message = f"Unable to convert {string} to a number."
             raise RuntimeError(message)
 
 
@@ -181,22 +181,22 @@ def decimal_to_gray_code(num: Union[str, int, float]) -> integerTupleType:
     """Convert the given number to a gray code.
 
     This function was inspired by the code here: https://en.wikipedia.org/wiki/Gray_code#Converting_to_and_from_Gray_code."""
-    gray_code = num ^ (num >> 1)
+    gray_code = num ^ (num >> 1)  # type: ignore[operator]
     binary_gray_code = decimal_to_base(gray_code, 2)
     return binary_gray_code
 
 
-# TODO: should this function only take an integer tuple and not a string (e.g. '111') or int which will be intepreted as binary (e.g. 111)
+# TODO: should this function only take an integer tuple and not a string (e.g. '111') or int which will be intepreted as binary (e.g. 111)  # noqa: E501
 @arguments_as_decimals
 def gray_code_to_decimal(num: integerTupleType) -> int:
     """Convert the given number to a gray code.
 
     This function was inspired by the code here: https://en.wikipedia.org/wiki/Gray_code#Converting_to_and_from_Gray_code."""
-    mask = num >> 1
+    mask = num >> 1  # type: ignore[operator]
     while mask != 0:
-        num = num ^ mask
+        num = num ^ mask  # type: ignore[operator, assignment]
         mask = mask >> 1
-    return num
+    return num  # type: ignore[return-value]
 
 
 def decimal_to_hex(decimal_number):
@@ -232,7 +232,7 @@ def integer_tuple_to_decimal(integer_tuple: integerTupleType) -> int:
     # flip the digits (so the smallest 'place' is first)
     flipped_digits = reversed(integer_tuple.digits)
     for index, num in enumerate(flipped_digits):
-        index_multiplier = integer_tuple.base ** index
+        index_multiplier = integer_tuple.base**index
         decimal_number += index_multiplier * num
 
     return decimal_number
@@ -241,7 +241,7 @@ def integer_tuple_to_decimal(integer_tuple: integerTupleType) -> int:
 def integer_to_decimal(num: Union[str, int, float], base: int) -> int:
     """Convert the number of the given base to a decimal number."""
     number = str(num)
-    # TODO: the base is currently limited to numbers between 2 and 36... generalize this so that there are no such limitations
+    # TODO: the base is currently limited to numbers between 2 and 36... generalize this so that there are no such limitations  # noqa: E501
     converted_number = int(number, base=base)
     return converted_number
 
@@ -257,26 +257,26 @@ def _base_converter_init(alphabet):
 def decimal_to_base(decimal_number: Union[str, int, float], base: int):
     """Convert the decimal_number to the given base."""
     if base == 1:
-        results = [1 for i in range(0, decimal_number)]
+        results = [1 for i in range(0, decimal_number)]  # type: ignore[arg-type]
         new_integer = IntegerTuple(base=base, digits=tuple(results))
         return new_integer
 
     results = []
     max_value = base - 1
 
-    floor_divided_value = decimal_number // base
+    floor_divided_value = decimal_number // base  # type: ignore[operator]
     if floor_divided_value > max_value:
         update = list(decimal_to_base(floor_divided_value, base).digits)
         results.extend(update)
     elif floor_divided_value != 0:
-        results.append(floor_divided_value)
-    results.append(decimal_number % base)
+        results.append(floor_divided_value)  # type: ignore[arg-type]
+    results.append(decimal_number % base)  # type: ignore[arg-type]
 
     new_integer = IntegerTuple(base=base, digits=tuple(results))
     return new_integer
 
 
-# # TODO: I don't think the result_as_digit_list argument name is very descriptive; there is probably a better name for that argument
+# # TODO: I don't think the result_as_digit_list argument name is very descriptive; there is probably a better name for that argument  # noqa: E501
 # def decimal_to_base(
 #     decimal_number: Union[str, int, float],
 #     base: int,
@@ -362,22 +362,22 @@ def iterable_differences(iterable):
 
 
 def combinations(iterable, length=None):
-    """Return all possible combinations of the given length which can be created from the given iterable. If no length is given, we will find all combinations of all lengths for the given iterable."""
+    """Return all possible combinations of the given length which can be created from the given iterable. If no length is given, we will find all combinations of all lengths for the given iterable."""  # noqa: E501
     if length is None:
         combos = []
-        for l in range(1, len(iterable) + 1):
-            combos.extend(combinations(iterable, length=l))
+        for i in range(1, len(iterable) + 1):
+            combos.extend(combinations(iterable, length=i))
         return combos
     else:
         return list(itertools.combinations(iterable, length))
 
 
 def combinations_with_replacement(iterable, length=None):
-    """Return all possible combinations of the given length which can be created from the given iterable. If no length is given, we will find all combinations of all lengths for the given iterable."""
+    """Return all possible combinations of the given length which can be created from the given iterable. If no length is given, we will find all combinations of all lengths for the given iterable."""  # noqa: E501
     if length is None:
         combos = []
-        for l in range(1, len(iterable) + 1):
-            combos.extend(combinations_with_replacement(iterable, length=l))
+        for i in range(1, len(iterable) + 1):
+            combos.extend(combinations_with_replacement(iterable, length=i))
         return combos
     else:
         return list(itertools.combinations_with_replacement(iterable, length))
@@ -395,11 +395,11 @@ def prod(iterable):
 
 
 def permutations(iterable, length=None):
-    """Return all possible permutations of the given iterable. If no length is given, we will find all permutations of all lengths for the given iterable"""
+    """Return all possible permutations of the given iterable. If no length is given, we will find all permutations of all lengths for the given iterable"""  # noqa: E501
     if length is None:
         perms = []
-        for l in range(1, len(iterable) + 1):
-            perms.extend(permutations(iterable, length=l))
+        for i in range(1, len(iterable) + 1):
+            perms.extend(permutations(iterable, length=i))
     else:
         perms = list(itertools.permutations(iterable, length))
     return perms
@@ -407,10 +407,10 @@ def permutations(iterable, length=None):
 
 def _split_fraction(fraction_string: str) -> Tuple[int, int]:
     """Split up a fraction string and return a numerator and denominator."""
-    split_fraction_string = fraction_string.split('/')
+    split_fraction_string = fraction_string.split("/")
 
     if len(split_fraction_string) != 2:
-        message = f'Unable to handle the input "{fraction_string}" as a fraction. When providing a fraction, please separate the two numbers with a "/" character.'
+        message = f'Unable to handle the input "{fraction_string}" as a fraction. When providing a fraction, please separate the two numbers with a "/" character.'  # noqa: E501
         raise ValueError(message)
     else:
         numerator = int(split_fraction_string[0].strip())
@@ -419,16 +419,16 @@ def _split_fraction(fraction_string: str) -> Tuple[int, int]:
 
 
 def _split_mixed_fraction(fraction_string):
-    """Split up a mixed fraction and return the whole number and the faction (e.g. "1 1/3"). This function requires that the whole number and fraction be separated by a space."""
+    """Split up a mixed fraction and return the whole number and the faction (e.g. "1 1/3"). This function requires that the whole number and fraction be separated by a space."""  # noqa: E501
 
-    split_fraction_string = fraction_string.split(' ')
+    split_fraction_string = fraction_string.split(" ")
     if len(split_fraction_string) != 2:
         print(
-            f'Unable to handle the input "{fraction_string}" as a mixed fraction. When providing a mixed fraction as an argument, please separate the whole number from the fraction with a space (and do not include spaces in the fraction).'
+            f'Unable to handle the input "{fraction_string}" as a mixed fraction. When providing a mixed fraction as an argument, please separate the whole number from the fraction with a space (and do not include spaces in the fraction).'  # noqa: E501
         )
         return None, None
     else:
-        # TODO: replace all spaces around the "/" character - not sure what this comment means, but I think I fixed it with the strip below... if this comment doesn't make any more sense to you, my future self, go ahead an remove it
+        # TODO: replace all spaces around the "/" character - not sure what this comment means, but I think I fixed it with the strip below... if this comment doesn't make any more sense to you, my future self, go ahead an remove it  # noqa: E501
         whole_number = int(split_fraction_string[0].strip())
         fraction = split_fraction_string[1].strip()
         return whole_number, fraction
@@ -439,7 +439,7 @@ def fraction_simplify(fraction_string):
     numerator, denominator = _split_fraction(fraction_string)
     gcd_for_fraction = gcd(numerator, denominator)
 
-    return f'{int(numerator / gcd_for_fraction)}/{int(denominator / gcd_for_fraction)}'
+    return f"{int(numerator / gcd_for_fraction)}/{int(denominator / gcd_for_fraction)}"
 
 
 def remainder(dividend, divisor):
@@ -464,12 +464,12 @@ def fraction_complex_to_mixed_fraction(fraction_string):
     numerator, denominator = _split_fraction(simplified_fraction_string)
 
     if numerator < denominator:
-        return f'{numerator}/{denominator}'
+        return f"{numerator}/{denominator}"
     elif numerator == denominator:
-        return '1'
+        return "1"
     else:
         fraction_remainder = remainder(numerator, denominator)
-        return f'{floor(numerator / denominator)} {fraction_remainder}/{denominator}'
+        return f"{floor(numerator / denominator)} {fraction_remainder}/{denominator}"
 
 
 def fraction_mixed_to_complex_fraction(fraction_string):
@@ -481,7 +481,7 @@ def fraction_mixed_to_complex_fraction(fraction_string):
 
     numerator, denominator = _split_fraction(fraction)
 
-    return f'{(whole_number * denominator) + numerator}/{denominator}'
+    return f"{(whole_number * denominator) + numerator}/{denominator}"
 
 
 def dot_product(item_a, item_b):
@@ -501,8 +501,8 @@ def percent(ratio):
 
 def percent_change(old_value: StrOrNumberType, new_value: StrOrNumberType) -> float:
     """Return the change from the old_value to the new_value (as a percent of the old_value)."""
-    difference = new_value - old_value
-    diff_as_ratio = difference / old_value
+    difference = new_value - old_value  # type: ignore[operator]
+    diff_as_ratio = difference / old_value  # type: ignore[operator]
     return percent(diff_as_ratio)
 
 
@@ -513,7 +513,7 @@ def gcd(number1, number2):
 
 
 def ratio(number1, number2):
-    """Return the ratio of the two numbers in the form 1:2. For example, if given 5 and 10, this function would return "1:2". If given 2 and 20, this function would return "1:10"."""
+    """Return the ratio of the two numbers in the form 1:2. For example, if given 5 and 10, this function would return "1:2". If given 2 and 20, this function would return "1:10"."""  # noqa: E501
     divisor = gcd(number1, number2)
     return "{}:{}".format(int(number1 / divisor), int(number2 / divisor))
 
@@ -522,7 +522,7 @@ def transpose(matrix):
     """Transpose the given matrix. See https://en.wikipedia.org/wiki/Transpose."""
 
     if not matrix or not matrix[0]:
-        print('Empty matrix provided')
+        print("Empty matrix provided")
         return None
 
     transposed_matrix = [[matrix[j][i] for j in range(len(matrix))] for i in range(len(matrix[0]))]
@@ -545,11 +545,11 @@ def number_line(value, min_, max_, interval: int = 1):
 
     # create the numberline
     if length_below_value < 0:
-        number_line_string = '({})|{}{}'.format(min_, '.' * length_above_value, max_)
+        number_line_string = "({})|{}{}".format(min_, "." * length_above_value, max_)
     elif length_above_value < 0:
-        number_line_string = '{}{}|({})'.format(min_, '.' * length_below_value, max_)
+        number_line_string = "{}{}|({})".format(min_, "." * length_below_value, max_)
     else:
-        number_line_string = '{}{}|{}{}'.format(min_, '.' * length_below_value, '.' * length_above_value, max_)
+        number_line_string = "{}{}|{}{}".format(min_, "." * length_below_value, "." * length_above_value, max_)
 
     return number_line_string
 
@@ -558,15 +558,15 @@ def number_line(value, min_, max_, interval: int = 1):
 # TODO: add a decorator to convert first arg to integer
 def number_zero_pad(num: StrOrNumberType, length: StrOrNumberType) -> str:
     """."""
-    num = int(num)
-    if length < len(str(num)):
-        message = 'The length you provided is shorter than the number. Please provide a length that is at least as long as the given number.'
+    num = int(num)  # type: ignore[arg-type]
+    if length < len(str(num)):  # type: ignore[operator]
+        message = "The length you provided is shorter than the number. Please provide a length that is at least as long as the given number."  # noqa: E501
         raise ValueError(message)
 
-    zero_padded_number = f'{num}'
+    zero_padded_number = f"{num}"
 
-    while len(zero_padded_number) < length:
-        zero_padded_number = f'0{zero_padded_number}'
+    while len(zero_padded_number) < length:  # type: ignore[operator]
+        zero_padded_number = f"0{zero_padded_number}"
 
     return zero_padded_number
 
@@ -609,10 +609,10 @@ def number_is_approx(number, approximate_value, *, relative_tolerance=1e-6):
 
 
 # TODO: rename this function as `enumerate` is already a python function
-def enumerate_range(range_string, range_split_string: str = '-'):
+def enumerate_range(range_string, range_split_string: str = "-"):
     """Enumerate the range specified by the string. For example, `1-3` returns `[1, 2, 3]`."""
     range_sections = range_string.split(range_split_string)
-    error_message = 'The enumerate_range function expects a string with two integers separated by the character specified by the `range_split_string` argument which can be passed into the enumerate_range function.'
+    error_message = "The enumerate_range function expects a string with two integers separated by the character specified by the `range_split_string` argument which can be passed into the enumerate_range function."  # noqa: E501
 
     if len(range_sections) != 2:
         raise ValueError(error_message)
@@ -644,13 +644,13 @@ def number_to_words(number):
 def number_to_scientific_notation(number):
     """Convert the given number to scientific notation."""
     precision = str(len(str(number)) + 1)
-    scientific_notation_number = f'{number:.{precision}E}'
+    scientific_notation_number = f"{number:.{precision}E}"
 
     # credits for the solution below to https://stackoverflow.com/a/6913576
     return (
-        scientific_notation_number.split('E')[0].rstrip('0').rstrip('.')
-        + 'E'
-        + scientific_notation_number.split('E')[1]
+        scientific_notation_number.split("E")[0].rstrip("0").rstrip(".")
+        + "E"
+        + scientific_notation_number.split("E")[1]
     )
 
 
